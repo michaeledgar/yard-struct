@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{yard-struct}
-  s.version = "0.2.0"
+  s.version = "1.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Edgar"]
@@ -25,6 +25,8 @@ Gem::Specification.new do |s|
      "VERSION",
      "lib/yard-struct.rb",
      "lib/yard-struct/legacy_handler.rb",
+     "lib/yard-struct/modern_handler.rb",
+     "lib/yard-struct/shared_methods.rb",
      "lib/yard-struct/tag_handler.rb",
      "spec/examples/example_helper.rb",
      "spec/examples/examples/simple_struct.rb",
