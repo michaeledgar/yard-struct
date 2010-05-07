@@ -1,7 +1,26 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
+require 'examples/example_helper'
+require 'yard-struct'
+
 describe "YardStruct" do
-  it "fails" do
-    fail "hey buddy, you should probably rename this file and start specing for real"
+  include Helpers::Examples
+  
+  describe "Extracting readers and writers" do
+    before(:all) do
+      parse_file :simple_struct
+    end
+    
+    it "should register an instance reader for each struct member" do
+      yard('SimpleStruct#foo').should be_instance_of(CodeObjects::MethodObject)
+      yard('SimpleStruct#bar').should be_instance_of(CodeObjects::MethodObject)
+      yard('SimpleStruct#baz').should be_instance_of(CodeObjects::MethodObject)
+    end
+    
+    it "should register instance writers for each struct member" do
+      yard('SimpleStruct#foo=').should be_instance_of(CodeObjects::MethodObject)
+      yard('SimpleStruct#bar=').should be_instance_of(CodeObjects::MethodObject)
+      yard('SimpleStruct#baz=').should be_instance_of(CodeObjects::MethodObject)
+    end
   end
 end

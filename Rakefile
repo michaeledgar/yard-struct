@@ -6,10 +6,11 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "yard-struct"
     gem.summary = %Q{YARD plugin for documenting auto-generated members of Struct subclasses.}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.description = %Q{yard-struct allows users to document their classes created through Struct.new using a simple, familiar syntax and @member tag.}
     gem.email = "michael.j.edgar@dartmouth.edu"
     gem.homepage = "http://github.com/michaeledgar/yard-struct"
     gem.authors = ["Michael Edgar"]
+    gem.add_dependency "yard", ">= 0.4.0"
     gem.add_development_dependency "rspec", ">= 1.2.9"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
