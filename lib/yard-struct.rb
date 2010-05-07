@@ -1,3 +1,5 @@
 require 'yard'
+require 'yard-struct/shared_methods'
 require 'yard-struct/tag_handler'
 require 'yard-struct/legacy_handler'
+require 'yard-struct/modern_handler'
