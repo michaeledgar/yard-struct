@@ -24,11 +24,15 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "lib/yard-struct.rb",
+     "lib/yard-struct/legacy_handler.rb",
+     "lib/yard-struct/tag_handler.rb",
      "spec/examples/example_helper.rb",
      "spec/examples/examples/simple_struct.rb",
+     "spec/examples/examples/struct_with_docs.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb",
-     "spec/yard-struct_spec.rb"
+     "spec/yard-struct_spec.rb",
+     "yard-struct.gemspec"
   ]
   s.homepage = %q{http://github.com/michaeledgar/yard-struct}
   s.rdoc_options = ["--charset=UTF-8"]

@@ -9,7 +9,7 @@ module YardStruct
     end
 
     def struct_subclass?(superstring)
-      superstring.match(/\A(Struct|OStruct)\.new\((.*?)\)/) ? $1 : nil
+      superstring && (superstring.match(/\A(Struct|OStruct)\.new\((.*?)\)/) ? $1 : nil)
     end
     
     def extract_parameters(superstring)
@@ -26,18 +26,23 @@ module YardStruct
       return_type = member_tag ? "[#{member_tag.types.join(', ')}]" : "[Object]"
     end
     
+    def raw_return_types_for_member(klass, member)
+      member_tag = member_tag_for_member(klass, member)
+      return_type = member_tag ? member_tag.types : nil
+    end
+    
     def getter_docstring(klass, member)
       member_tag = member_tag_for_member(klass, member)
       getter_doc_text = member_tag ? member_tag.text : "Returns the value of attribute #{member}"
-      getter_doc_text << "\n@return #{return_type_for_member(klass, member)} the current value of #{member}"
+      getter_doc_text += "\n@return #{return_type_for_member(klass, member)} the current value of #{member}"
     end
     
     def setter_docstring(klass, member)
       member_tag = member_tag_for_member(klass, member)
       return_type = return_type_for_member(klass, member)
       setter_doc_text = member_tag ? member_tag.text : "Sets the attribute #{member}"
-      setter_doc_text << "\n@param #{return_type} value the value to set the attribute #{member} to."
-      setter_doc_text << "\n@return #{return_type} the newly set value"
+      setter_doc_text += "\n@param #{return_type} value the value to set the attribute #{member} to."
+      setter_doc_text += "\n@return #{return_type} the newly set value"
     end
     
     def process
@@ -60,22 +65,22 @@ module YardStruct
             
             # We want to convert these members into attributes just like
             # as if they were declared using attr_accessor.
-            new_meth = MethodObject.new(klass, "#{member}=", :instance) do |o|
+            new_meth = register MethodObject.new(klass, "#{member}=", :instance) do |o|
               o.parameters = [['value', nil]]
               o.signature ||= "def #{member}=(value)"
               o.source ||= "#{o.signature}\n  @#{member} = value\nend"
             end
-            register new_meth
-            new_meth.docstring = setter_docstring klass, member
+            new_meth.docstring.replace setter_docstring(klass, member)
+            
             klass.attributes[:instance][member][:write] = new_meth
             
             # Do the getter
-            new_meth = MethodObject.new(klass, member, :instance) do |o|
+            new_meth = register MethodObject.new(klass, member, :instance) do |o|
               o.signature ||= "def #{member}"
               o.source ||= "#{o.signature}\n  @#{member}\nend"
             end
-            register new_meth
-            new_meth.docstring = getter_docstring klass, member
+            new_meth.docstring.replace getter_docstring(klass, member)
+            
             klass.attributes[:instance][member][:read] = new_meth
             
           end

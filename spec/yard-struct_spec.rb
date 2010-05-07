@@ -62,9 +62,17 @@ describe "YardStruct" do
       yard('FileEmailer#filename').docstring.strip.should == "the filename to email to my servers"
     end
     
-    it "sets the correct return types on generated attributes/methods" do
+    it "sets the correct return types on generated readers" do
       yard('FileEmailer#filename').tags(:return).should_not be_empty
       yard('FileEmailer#filename').tag(:return).types.should == ["String"]
+    end
+    
+    it "extracts and sets more complicated return types" do
+      yard('FileEmailer#extra=').tag(:param).types.should == ["IO", "#read"]
+    end
+    
+    it "only creates one return tag" do
+      yard('FileEmailer#extra').tags(:return).size.should == 1
     end
     
     it "creates a parameter tag for the generated writers" do
