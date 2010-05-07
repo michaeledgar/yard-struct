@@ -22,5 +22,17 @@ describe "YardStruct" do
       yard('SimpleStruct#bar=').should be_instance_of(CodeObjects::MethodObject)
       yard('SimpleStruct#baz=').should be_instance_of(CodeObjects::MethodObject)
     end
+    
+    it "should create readable attributes to represent each struct member" do
+      yard('SimpleStruct').attributes[:instance][:foo][:read].should be_instance_of(CodeObjects::MethodObject)
+      yard('SimpleStruct').attributes[:instance][:bar][:read].should be_instance_of(CodeObjects::MethodObject)
+      yard('SimpleStruct').attributes[:instance][:baz][:read].should be_instance_of(CodeObjects::MethodObject)
+    end
+    
+    it "should create writeable attributes to represent each struct member" do
+      yard('SimpleStruct').attributes[:instance][:foo][:write].should be_instance_of(CodeObjects::MethodObject)
+      yard('SimpleStruct').attributes[:instance][:bar][:write].should be_instance_of(CodeObjects::MethodObject)
+      yard('SimpleStruct').attributes[:instance][:baz][:write].should be_instance_of(CodeObjects::MethodObject)
+    end
   end
 end

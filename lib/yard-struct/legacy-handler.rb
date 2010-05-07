@@ -20,21 +20,26 @@ module YardStruct
           
           # For each parameter, add reader and writers
           params.each do |member|
-            # make reader...
-            obj = register MethodObject.new(klass, member, :instance) do |o| 
-              o.visibility = :public
-              o.signature = "def #{member}"
-              o.explicit = false
-              o.parameters = []
-              o.source = statement
-            end
-            # make writer...
-            obj = register MethodObject.new(klass, "#{member}=", :instance) do |o|
-              o.visibility = :public
-              o.signature = "def #{member}="
-              o.explicit = false
-              o.parameters = [['value', nil]]
-              o.source = statement
+            klass.attributes[:instance][member] = SymbolHash[:read => nil, :write => nil]
+            {:read => member, :write => "#{member}="}.each do |type, meth|
+              klass.attributes[:instance][member][type] = MethodObject.new(klass, meth, scope) do |o|
+                if type == :write
+                  o.parameters = [['value', nil]]
+                  src = "def #{meth}=(value)"
+                  full_src = "#{src}\n  @#{member} = value\nend"
+                  doc = "Sets the attribute #{member}\n@param value the value to set the attribute #{member} to."
+                else
+                  src = "def #{meth}"
+                  full_src = "#{src}\n  @#{member}\nend"
+                  doc = "Returns the value of attribute #{member}"
+                end
+                o.source ||= full_src
+                o.signature ||= src
+                o.docstring = statement.comments.to_s.empty? ? doc : statement.comments
+              end
+
+              # Register the objects explicitly
+              register klass.attributes[:instance][member][type]
             end
           end
           
