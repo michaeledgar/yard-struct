@@ -1,2 +1,3 @@
 require 'yard'
-require 'yard-struct/legacy-handler'
+require 'yard-struct/tag_handler'
+require 'yard-struct/legacy_handler'
